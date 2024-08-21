@@ -4,9 +4,10 @@ import ethers_gleam/primitives/bytes
 import ethers_gleam/primitives/integer
 import gleam/bit_array
 import gleam/dict
-import gleam/io
+import gleam/list
 import gleam/option.{type Option}
 import gleam/result
+import gleam/string
 import gleam/string_builder
 import keccak_gleam
 
@@ -31,20 +32,31 @@ pub type TypedDataValues =
   List(#(String, ComplexField))
 
 pub type TypedData =
-  dict.Dict(String, TypedDataValues)
+  #(String, TypedDataValues)
 
-fn do_encode_type(values: TypedDataValues) -> List(string_builder.StringBuilder) {
+fn do_encode_type(
+  values: TypedDataValues,
+) -> #(List(string_builder.StringBuilder), dict.Dict(String, String)) {
   case values {
-    [] -> []
+    [] -> #([], dict.new())
     [#(key, value), ..rest] -> {
-      let type_ = case value {
-        Primitive(primitives.String(_)) -> "string"
-        Primitive(primitives.Address(_)) -> "address"
-        Primitive(primitives.Uint256(_)) -> "uint256"
-        Primitive(primitives.Bytes32(_)) -> "bytes32"
-        Struct(_) -> todo
+      let #(type_, new_types) = case value {
+        Primitive(primitives.String(_)) -> #("string", option.None)
+        Primitive(primitives.Address(_)) -> #("address", option.None)
+        Primitive(primitives.Uint256(_)) -> #("uint256", option.None)
+        Primitive(primitives.Bytes32(_)) -> #("bytes32", option.None)
+        Struct(struct) -> {
+          let struct_name = encode_type(struct)
+          let #(name, _) = struct
+          #(name, option.Some(struct_name))
+        }
       }
-      [string_builder.from_string(type_ <> " " <> key), ..do_encode_type(rest)]
+      let #(rest, names) = do_encode_type(rest)
+      let result_dict = case new_types {
+        option.Some(name) -> names |> dict.insert(type_, name)
+        option.None -> names
+      }
+      #([string_builder.from_string(type_ <> " " <> key), ..rest], result_dict)
     }
   }
 }
@@ -107,13 +119,26 @@ fn domain_to_type(
   }
 }
 
-fn encode_type(domain: TypedDataDomain) -> String {
-  let types = domain |> domain_to_type(Name) |> do_encode_type
-  string_builder.from_string("EIP712Domain(")
-  |> string_builder.append_builder(string_builder.join(types, ","))
-  |> string_builder.append(")")
+pub fn encode_type(typed_data: TypedData) -> String {
+  let #(types, result_dict) = do_encode_type(typed_data.1)
+  let struct_types =
+    result_dict
+    |> dict.to_list
+    |> list.map(fn(x) { x.1 })
+    |> list.sort(string.compare)
+    |> list.map(string_builder.from_string)
+  let builder =
+    string_builder.from_string(typed_data.0 <> "(")
+    |> string_builder.append_builder(string_builder.join(types, ","))
+    |> string_builder.append(")")
+
+  string_builder.concat([builder, ..struct_types])
   |> string_builder.to_string
-  |> io.debug()
+}
+
+fn encode_domain_type(domain: TypedDataDomain) -> String {
+  let types = domain |> domain_to_type(Name)
+  #("EIP712Domain", types) |> encode_type
 }
 
 fn do_encode_data(domain: TypedDataDomain, field: EncodeField) -> BitArray {
@@ -172,7 +197,7 @@ fn encode_data(domain: TypedDataDomain) -> BitArray {
 }
 
 pub fn hash_domain(domain: TypedDataDomain) -> BitArray {
-  let encoded_type = encode_type(domain) |> bit_array.from_string
+  let encoded_type = encode_domain_type(domain) |> bit_array.from_string
   let encoded_type_hash = keccak_gleam.hash(encoded_type)
   let encoded_data = encode_data(domain)
   keccak_gleam.hash(bit_array.concat([encoded_type_hash, encoded_data]))
