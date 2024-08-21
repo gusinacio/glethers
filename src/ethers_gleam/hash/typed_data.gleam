@@ -4,6 +4,7 @@ import ethers_gleam/primitives/bytes
 import ethers_gleam/primitives/integer
 import gleam/bit_array
 import gleam/dict
+import gleam/io
 import gleam/option.{type Option}
 import gleam/result
 import gleam/string_builder
@@ -27,10 +28,26 @@ pub type ComplexField {
 }
 
 pub type TypedDataValues =
-  dict.Dict(String, ComplexField)
+  List(#(String, ComplexField))
 
 pub type TypedData =
   dict.Dict(String, TypedDataValues)
+
+fn do_encode_type(values: TypedDataValues) -> List(string_builder.StringBuilder) {
+  case values {
+    [] -> []
+    [#(key, value), ..rest] -> {
+      let type_ = case value {
+        Primitive(primitives.String(_)) -> "string"
+        Primitive(primitives.Address(_)) -> "address"
+        Primitive(primitives.Uint256(_)) -> "uint256"
+        Primitive(primitives.Bytes32(_)) -> "bytes32"
+        Struct(_) -> todo
+      }
+      [string_builder.from_string(type_ <> " " <> key), ..do_encode_type(rest)]
+    }
+  }
+}
 
 type EncodeField {
   Name
@@ -40,57 +57,63 @@ type EncodeField {
   Salt
 }
 
-fn do_encode_type(
+fn domain_to_type(
   domain: TypedDataDomain,
   field: EncodeField,
-) -> List(string_builder.StringBuilder) {
+) -> TypedDataValues {
   case field {
     Name ->
-      case option.is_some(domain.name) {
-        True -> [
-          string_builder.from_string("string name"),
-          ..do_encode_type(domain, Version)
+      case domain.name {
+        option.Some(name) -> [
+          #("name", Primitive(primitives.from_string(name))),
+          ..domain_to_type(domain, Version)
         ]
-        False -> do_encode_type(domain, Version)
+        option.None -> domain_to_type(domain, Version)
       }
     Version ->
-      case option.is_some(domain.version) {
-        True -> [
-          string_builder.from_string("string version"),
-          ..do_encode_type(domain, ChainId)
+      case domain.version {
+        option.Some(version) -> [
+          #("version", Primitive(primitives.from_string(version))),
+          ..domain_to_type(domain, ChainId)
         ]
-        False -> do_encode_type(domain, ChainId)
+        option.None -> domain_to_type(domain, ChainId)
       }
     ChainId ->
-      case option.is_some(domain.chain_id) {
-        True -> [
-          string_builder.from_string("uint256 chainId"),
-          ..do_encode_type(domain, VerifyingContract)
+      case domain.chain_id {
+        option.Some(chain_id) -> [
+          #("chainId", Primitive(primitives.from_uint256(chain_id))),
+          ..domain_to_type(domain, VerifyingContract)
         ]
-        False -> do_encode_type(domain, Salt)
+        option.None -> domain_to_type(domain, VerifyingContract)
       }
     VerifyingContract ->
-      case option.is_some(domain.verifying_contract) {
-        True -> [
-          string_builder.from_string("address verifyingContract"),
-          ..do_encode_type(domain, Salt)
+      case domain.verifying_contract {
+        option.Some(verifying_contract) -> [
+          #(
+            "verifyingContract",
+            Primitive(primitives.from_address(verifying_contract)),
+          ),
+          ..domain_to_type(domain, Salt)
         ]
-        False -> do_encode_type(domain, Salt)
+        option.None -> domain_to_type(domain, Salt)
       }
     Salt ->
-      case option.is_some(domain.salt) {
-        True -> [string_builder.from_string("bytes32 salt")]
-        False -> []
+      case domain.salt {
+        option.Some(salt) -> [
+          #("salt", Primitive(primitives.from_bytes32(salt))),
+        ]
+        option.None -> []
       }
   }
 }
 
 fn encode_type(domain: TypedDataDomain) -> String {
-  let types = do_encode_type(domain, Name)
+  let types = domain |> domain_to_type(Name) |> do_encode_type
   string_builder.from_string("EIP712Domain(")
   |> string_builder.append_builder(string_builder.join(types, ","))
   |> string_builder.append(")")
   |> string_builder.to_string
+  |> io.debug()
 }
 
 fn do_encode_data(domain: TypedDataDomain, field: EncodeField) -> BitArray {

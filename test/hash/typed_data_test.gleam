@@ -31,11 +31,10 @@ type Person {
 }
 
 fn eip_712_encoder(person: Person) -> typed_data.TypedData {
-  let value =
-    dict.from_list([
-      #("name", Primitive(primitives.from_string(person.name))),
-      #("wallet", Primitive(primitives.from_address(person.wallet))),
-    ])
+  let value = [
+    #("name", Primitive(primitives.from_string(person.name))),
+    #("wallet", Primitive(primitives.from_address(person.wallet))),
+  ]
   dict.from_list([#("Person", value)])
 }
 
