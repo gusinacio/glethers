@@ -1,20 +1,20 @@
-# ethers_gleam
+# glethers
 
-[![Package Version](https://img.shields.io/hexpm/v/ethers_gleam)](https://hex.pm/packages/ethers_gleam)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/ethers_gleam/)
+[![Package Version](https://img.shields.io/hexpm/v/glethers)](https://hex.pm/packages/glethers)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/glethers/)
 
 ```sh
-gleam add ethers_gleam@1
+gleam add glethers
 ```
 ```gleam
-import ethers_gleam
+import glethers
 
 pub fn main() {
   // TODO: An example of the project in use
 }
 ```
 
-Further documentation can be found at <https://hexdocs.pm/ethers_gleam>.
+Further documentation can be found at <https://hexdocs.pm/glethers>.
 
 ## Development
 
