@@ -1,4 +1,5 @@
 import ethers_gleam/address.{type Address}
+import ethers_gleam/hash/message
 import ethers_gleam/primitives
 import ethers_gleam/primitives/bytes
 import ethers_gleam/primitives/integer
@@ -136,39 +137,40 @@ pub fn encode_type(typed_data: TypedData) -> String {
   |> string_builder.to_string
 }
 
-fn encode_domain_type(domain: TypedDataDomain) -> String {
-  let types = domain |> domain_to_type(Name)
-  #("EIP712Domain", types) |> encode_type
-}
-
-fn do_encode_data(domain: TypedDataDomain, field: EncodeField) -> BitArray {
+fn do_encode_domain_data(
+  domain: TypedDataDomain,
+  field: EncodeField,
+) -> BitArray {
   case field {
     Name ->
       case domain.name {
         option.Some(name) -> {
           let assert Ok(name) =
             primitives.from(name) |> result.map(primitives.eip712_encode)
-          bit_array.concat([name, do_encode_data(domain, Version)])
+          bit_array.concat([name, do_encode_domain_data(domain, Version)])
         }
-        option.None -> do_encode_data(domain, Version)
+        option.None -> do_encode_domain_data(domain, Version)
       }
     Version ->
       case domain.version {
         option.Some(version) -> {
           let assert Ok(version) =
             primitives.from(version) |> result.map(primitives.eip712_encode)
-          bit_array.concat([version, do_encode_data(domain, ChainId)])
+          bit_array.concat([version, do_encode_domain_data(domain, ChainId)])
         }
-        option.None -> do_encode_data(domain, ChainId)
+        option.None -> do_encode_domain_data(domain, ChainId)
       }
     ChainId ->
       case domain.chain_id {
         option.Some(chain_id) -> {
           let assert Ok(chain_id) =
             primitives.from(chain_id) |> result.map(primitives.eip712_encode)
-          bit_array.concat([chain_id, do_encode_data(domain, VerifyingContract)])
+          bit_array.concat([
+            chain_id,
+            do_encode_domain_data(domain, VerifyingContract),
+          ])
         }
-        option.None -> do_encode_data(domain, VerifyingContract)
+        option.None -> do_encode_domain_data(domain, VerifyingContract)
       }
     VerifyingContract ->
       case domain.verifying_contract {
@@ -176,9 +178,12 @@ fn do_encode_data(domain: TypedDataDomain, field: EncodeField) -> BitArray {
           let assert Ok(verifying_contract) =
             primitives.from(verifying_contract)
             |> result.map(primitives.eip712_encode)
-          bit_array.concat([verifying_contract, do_encode_data(domain, Salt)])
+          bit_array.concat([
+            verifying_contract,
+            do_encode_domain_data(domain, Salt),
+          ])
         }
-        option.None -> do_encode_data(domain, Salt)
+        option.None -> do_encode_domain_data(domain, Salt)
       }
     Salt ->
       case domain.salt {
@@ -192,29 +197,50 @@ fn do_encode_data(domain: TypedDataDomain, field: EncodeField) -> BitArray {
   }
 }
 
-fn encode_data(domain: TypedDataDomain) -> BitArray {
-  do_encode_data(domain, Name)
+fn do_encode_data(values: TypedDataValues) -> BitArray {
+  case values {
+    [] -> <<>>
+    [#(_, value), ..rest] -> {
+      let encoded_value = case value {
+        Primitive(prim) -> {
+          prim |> primitives.eip712_encode
+        }
+        Struct(struct) -> {
+          struct |> hash_struct
+        }
+      }
+      <<encoded_value:bits, do_encode_data(rest):bits>>
+    }
+  }
+}
+
+pub fn encode_data(values: TypedData) -> BitArray {
+  do_encode_data(values.1)
 }
 
 pub fn hash_domain(domain: TypedDataDomain) -> BitArray {
-  let encoded_type = encode_domain_type(domain) |> bit_array.from_string
+  let types = domain |> domain_to_type(Name)
+  #("EIP712Domain", types) |> hash_struct
+}
+
+pub fn hash_struct(data: TypedData) -> BitArray {
+  let encoded_type = encode_type(data) |> bit_array.from_string
   let encoded_type_hash = keccak_gleam.hash(encoded_type)
-  let encoded_data = encode_data(domain)
+  let encoded_data = encode_data(data)
   keccak_gleam.hash(bit_array.concat([encoded_type_hash, encoded_data]))
 }
 
-pub fn encode_types_and_values(_values: TypedData) -> BitArray {
-  <<>>
-}
-
 pub fn encode(domain: TypedDataDomain, values: TypedData) -> BitArray {
-  bit_array.concat([
-    <<0x19, 0x01>>,
-    hash_domain(domain),
-    encode_types_and_values(values),
-  ])
+  bit_array.concat([<<0x19, 0x01>>, hash_domain(domain), hash_struct(values)])
 }
 
-pub fn hash_structure(domain: TypedDataDomain, values: TypedData) -> BitArray {
-  keccak_gleam.hash(encode(domain, values))
+pub fn hash_message(
+  domain: TypedDataDomain,
+  struct: a,
+  encoder: fn(a) -> TypedData,
+) -> message.Hash {
+  let typed_data = encoder(struct)
+  let assert Ok(hash) =
+    message.from_bit_array(keccak_gleam.hash(encode(domain, typed_data)))
+  hash
 }
