@@ -29,17 +29,27 @@ gleam test  # Run the tests
 - [x] Private key parsing
 - [x] Signing and verifying messages
 - [x] Crypto functions: keccak256, sha256, etc
+- [x] Eip712 signed typed message
 - [ ] Blockchain primitives: 
     - [x] Address
+    - [x] Signature
     - [ ] Transaction
-    - [x] Block
-    - [ ] Signature
-- [ ] signed and unsigned numbers: u32, u64, u128, u256, i32, i64, i128, i256
+    - [ ] Block
+    - [ ] signed and unsigned numbers: 
+        - [ ] u32
+        - [ ] u64
+        - [ ] u128
+        - [x] u256
+        - [ ] i32
+        - [ ] i64
+        - [ ] i128
+        - [ ] i256
 - [ ] RPC methods
 - [ ] ABI parser
-- [ ] Eip712 signed typed message
 - [ ] Contract interaction
 - [ ] Websocket connection
 - [ ] Etherscan API
+- [ ] Javascript compatibility
+    - [ ] BigInt
 
 Use big int for js: https://gitlab.com/Nicd/bigi
