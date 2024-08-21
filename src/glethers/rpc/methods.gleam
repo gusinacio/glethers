@@ -1,7 +1,7 @@
-import ethers_gleam/address
-import ethers_gleam/block
-import ethers_gleam/rpc/calls
 import gleam/json
+import glethers/address
+import glethers/block
+import glethers/rpc/calls
 
 pub type RpcMethod {
   BlockNumber

@@ -1,7 +1,7 @@
-import ethers_gleam/signer
-import ethers_gleam/signer/signing_key
 import gleam/string
 import gleeunit/should
+import glethers/signer
+import glethers/signer/signing_key
 import secp256k1_gleam
 
 pub fn message_hash_test() {

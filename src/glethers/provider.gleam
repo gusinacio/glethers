@@ -1,6 +1,6 @@
-import ethers_gleam/rpc/calls
-import ethers_gleam/rpc/methods
 import gleam/http/response
+import glethers/rpc/calls
+import glethers/rpc/methods
 
 // import gleam/dynamic
 import gleam/http.{Post}

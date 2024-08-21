@@ -1,8 +1,8 @@
-import ethers_gleam/address.{type Address}
-import ethers_gleam/primitives/bytes
-import ethers_gleam/primitives/integer
 import gleam/bit_array
 import gleam/dynamic
+import glethers/address.{type Address}
+import glethers/primitives/bytes
+import glethers/primitives/integer
 import keccak_gleam
 
 pub type Primitive {

@@ -1,14 +1,14 @@
-import ethers_gleam/address.{type Address}
-import ethers_gleam/hash/message
-import ethers_gleam/primitives
-import ethers_gleam/primitives/bytes
-import ethers_gleam/primitives/integer
 import gleam/bit_array
 import gleam/dict
 import gleam/list
 import gleam/option.{type Option}
 import gleam/string
 import gleam/string_builder
+import glethers/address.{type Address}
+import glethers/hash/message
+import glethers/primitives
+import glethers/primitives/bytes
+import glethers/primitives/integer
 import keccak_gleam
 
 // domain should define its own fields

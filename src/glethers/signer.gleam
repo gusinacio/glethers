@@ -1,7 +1,7 @@
-import ethers_gleam/hash/message
-import ethers_gleam/hash/typed_data
-import ethers_gleam/provider
-import ethers_gleam/signer/signing_key.{type PrivateKey}
+import glethers/hash/message
+import glethers/hash/typed_data
+import glethers/provider
+import glethers/signer/signing_key.{type PrivateKey}
 import secp256k1_gleam
 
 pub type Signature =

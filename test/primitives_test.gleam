@@ -1,7 +1,7 @@
-import ethers_gleam/address
-import ethers_gleam/primitives/integer
 import gleam/dynamic
 import gleeunit/should
+import glethers/address
+import glethers/primitives/integer
 
 pub fn uint256_decode_test() {
   let value = integer.Uint256(123_456_789)

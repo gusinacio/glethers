@@ -1,9 +1,9 @@
-import ethers_gleam/address
-import ethers_gleam/block
-import ethers_gleam/provider
-import ethers_gleam/rpc/methods
 import gleam/httpc
 import gleeunit/should
+import glethers/address
+import glethers/block
+import glethers/provider
+import glethers/rpc/methods
 
 pub fn rpc_methods_test() {
   let provider = provider.Rpc("eth.llamarpc.com")

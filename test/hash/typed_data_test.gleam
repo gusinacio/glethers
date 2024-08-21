@@ -1,14 +1,14 @@
-import ethers_gleam/address
-import ethers_gleam/hash/message
-import ethers_gleam/hash/typed_data.{Primitive, Struct}
-import ethers_gleam/primitives
-import ethers_gleam/primitives/integer
-import ethers_gleam/signer
-import ethers_gleam/signer/signing_key
 import gleam/bit_array
 import gleam/option
 import gleam/string
 import gleeunit/should
+import glethers/address
+import glethers/hash/message
+import glethers/hash/typed_data.{Primitive, Struct}
+import glethers/primitives
+import glethers/primitives/integer
+import glethers/signer
+import glethers/signer/signing_key
 import secp256k1_gleam
 
 pub fn hash_domain_test() {

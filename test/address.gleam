@@ -1,5 +1,5 @@
-import ethers_gleam/address
 import gleeunit/should
+import glethers/address
 
 // gleeunit test functions end in `_test`
 pub fn parse_address_test() {
