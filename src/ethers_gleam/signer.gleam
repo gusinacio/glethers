@@ -1,4 +1,5 @@
 import ethers_gleam/hash/message
+import ethers_gleam/hash/typed_data
 import ethers_gleam/provider
 import ethers_gleam/signer/signing_key.{type PrivateKey}
 import secp256k1_gleam
@@ -15,6 +16,16 @@ pub fn sign_hash(private_key: PrivateKey, hash: message.Hash) -> Signature {
   let message = hash |> message.to_bit_array
   let assert Ok(signature) = secp256k1_gleam.sign(message, private_key)
   signature
+}
+
+pub fn sign_typed_data(
+  private_key: PrivateKey,
+  domain: typed_data.TypedDataDomain,
+  struct: a,
+  encoder: fn(a) -> typed_data.TypedData,
+) -> Signature {
+  let hash = typed_data.hash_message(domain, struct, encoder)
+  sign_hash(private_key, hash)
 }
 
 pub fn sign_message(private_key: PrivateKey, message: String) -> Signature {

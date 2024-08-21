@@ -144,12 +144,12 @@ pub fn sign_typed_data_test() {
     address.from_string("0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826")
 
   let person = Person(name: "Cow", wallet: wallet)
-  let hash = typed_data.hash_message(domain, person, person_encoder)
   let assert Ok(private_key) =
     signing_key.from_string(
       "0x314af9517df1fa5ab83ade9505d5d8b368d85833b4e39d7316daccba26e8e756",
     )
-  let signature = private_key |> signer.sign_hash(hash)
+  let signature =
+    private_key |> signer.sign_typed_data(domain, person, person_encoder)
 
   let expected =
     "0x67214bc6b9c398536dd440bf2fb7e9e9300a414b1d6d7efad681739b3632f3b4702485610bcd79ea1e9ba25511143ba9a0d5d341dc5eddd35dd3daf70d56d7861b"
