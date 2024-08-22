@@ -9,6 +9,25 @@ import glethers/transaction/sidecar
 pub type ChainId =
   integer.Uint64
 
+pub type TxType {
+  /// Legacy transaction type.
+  Legacy
+  /// EIP-2930 transaction type.
+  Eip2930
+  /// EIP-1559 transaction type.
+  Eip1559
+  /// EIP-4844 transaction type.
+  Eip4844
+}
+
+fn tx_type_id(tx_type: TxType) -> Int {
+  case tx_type {
+    Legacy -> 0
+    Eip2930 -> 1
+    Eip1559 -> 2
+    Eip4844 -> 3
+  }
+}
 
 pub type TransactionRequest {
   TransactionRequest(
@@ -26,7 +45,7 @@ pub type TransactionRequest {
     access_list: Option(eip2930.AccessList),
     transaction_type: Option(integer.Uint8),
     blob_versioned_hashes: Option(List(bytes.Bytes32)),
-    sidecar: Option(sidecard.BlobTransactionSidecar),
+    sidecar: Option(sidecar.BlobTransactionSidecar),
   )
 }
 
@@ -38,18 +57,9 @@ pub type Transaction {
   Transaction(to: address.Address)
 }
 
-pub fn new_transaction(req: TransactionRequest) -> Transaction {
-  Transaction(req.to)
-}
-
 pub fn hash(_transaction: Transaction) -> message.Hash {
   todo
 }
-
-//_parseLegacy
-//_parseEip2930
-//_parseEip1559
-//_parseEip4844
 
 /// Check this builder's preferred type, based on the fields that are set.
 ///
@@ -58,14 +68,21 @@ pub fn hash(_transaction: Transaction) -> message.Hash {
 /// - EIP-2930 if access_list is set
 /// - Legacy if gas_price is set and access_list is unset
 /// - EIP-1559 in all other cases
-// pub const fn preferred_type(&self) -> TxType {
-//     if self.sidecar.is_some() || self.max_fee_per_blob_gas.is_some() {
-//         TxType::Eip4844
-//     } else if self.access_list.is_some() && self.gas_price.is_some() {
-//         TxType::Eip2930
-//     } else if self.gas_price.is_some() {
-//         TxType::Legacy
-//     } else {
-//         TxType::Eip1559
-//     }
-// }
+fn preferred_type(tx: TransactionRequest) -> TxType {
+  let sidecar = tx.sidecar |> option.is_some
+  let max_fee_per_blob_gas = tx.max_fee_per_blob_gas |> option.is_some
+  let access_list = tx.access_list |> option.is_some
+  let gas_price = tx.gas_price |> option.is_some
+  let sidecard_or_max_blob_fee = sidecar || max_fee_per_blob_gas
+  let access_list_and_gas_price = access_list && gas_price
+  case sidecard_or_max_blob_fee, access_list_and_gas_price, gas_price {
+    True, _, _ -> Eip4844
+    _, True, _ -> Eip2930
+    _, _, True -> Legacy
+    _, _, _ -> Eip1559
+  }
+}
+//_parseLegacy
+//_parseEip2930
+//_parseEip1559
+//_parseEip4844

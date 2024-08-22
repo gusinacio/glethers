@@ -1,5 +1,7 @@
 // EIP-4844 sidecar type
 
+import glethers/primitives/bytes
+
 pub type BlobTransactionSidecar {
   BlobTransactionSidecar(
     blobs: List(Blob),
