@@ -2,43 +2,20 @@
 # You typically do not need to edit this file
 
 packages = [
-  { name = "brotli", version = "0.3.2", build_tools = ["rebar3"], requirements = [], otp_app = "brotli", source = "hex", outer_checksum = "9EC3EF9C753F80D0C657B4905193C55E5198F169FA1D1C044D8601D4D931A2AD" },
   { name = "castore", version = "1.0.8", build_tools = ["mix"], requirements = [], otp_app = "castore", source = "hex", outer_checksum = "0B2B66D2EE742CB1D9CB8C8BE3B43C3A70EE8651F37B75A8B982E036752983F1" },
-  { name = "decimal", version = "2.1.1", build_tools = ["mix"], requirements = [], otp_app = "decimal", source = "hex", outer_checksum = "53CFE5F497ED0E7771AE1A475575603D77425099BA5FAEF9394932B35020FFCC" },
   { name = "ex_keccak", version = "0.7.5", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_keccak", source = "hex", outer_checksum = "8A5E1CB7F96FFF5E480FF6A121477B90C4FD8C150984086DFFD98819F5D83763" },
   { name = "ex_secp256k1", version = "0.7.3", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_secp256k1", source = "hex", outer_checksum = "EA63159442F4D8143166CD1507DA03EDC43216D6E7C6BAC4B416BDCE04F0DAA8" },
-  { name = "ezstd", version = "1.1.0", build_tools = ["rebar3"], requirements = [], otp_app = "ezstd", source = "hex", outer_checksum = "28CFA0ED6CC3922095AD5BA0F23392A1664273358B17184BAA909868361184E7" },
-  { name = "finch", version = "0.18.0", build_tools = ["mix"], requirements = ["castore", "mime", "mint", "nimble_options", "nimble_pool", "telemetry"], otp_app = "finch", source = "hex", outer_checksum = "69F5045B042E531E53EDC2574F15E25E735B522C37E2DDB766E15B979E03AA65" },
-  { name = "gleam_crypto", version = "1.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_crypto", source = "hex", outer_checksum = "ADD058DEDE8F0341F1ADE3AAC492A224F15700829D9A3A3F9ADF370F875C51B7" },
   { name = "gleam_http", version = "3.6.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "8C07DF9DF8CC7F054C650839A51C30A7D3C26482AC241C899C1CEA86B22DBE51" },
   { name = "gleam_httpc", version = "2.2.0", build_tools = ["gleam"], requirements = ["gleam_http", "gleam_stdlib"], otp_app = "gleam_httpc", source = "hex", outer_checksum = "CF76C71002DEECF6DC5D9CA83D962728FAE166B57926BE442D827004D3C7DF1B" },
-  { name = "gleam_json", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib", "thoas"], otp_app = "gleam_json", source = "hex", outer_checksum = "9063D14D25406326C0255BDA0021541E797D8A7A12573D849462CAFED459F6EB" },
-  { name = "gleam_stdlib", version = "0.39.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "2D7DE885A6EA7F1D5015D1698920C9BAF7241102836CE0C3837A4F160128A9C4" },
+  { name = "gleam_stdlib", version = "0.40.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "86606B75A600BBD05E539EB59FABC6E307EEEA7B1E5865AFB6D980A93BCB2181" },
   { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
-  { name = "hpax", version = "1.0.0", build_tools = ["mix"], requirements = [], otp_app = "hpax", source = "hex", outer_checksum = "7F1314731D711E2CA5FDC7FD361296593FC2542570B3105595BB0BC6D0FAD601" },
-  { name = "jason", version = "1.4.4", build_tools = ["mix"], requirements = ["decimal"], otp_app = "jason", source = "hex", outer_checksum = "C5EB0CAB91F094599F94D55BC63409236A8EC69A21A67814529E8D5F6CC90B3B" },
   { name = "keccak_gleam", version = "1.0.1", build_tools = ["gleam"], requirements = ["ex_keccak", "gleam_stdlib"], otp_app = "keccak_gleam", source = "hex", outer_checksum = "27D479A1E45924760B6E1DCB6D84E53B55F1BFD4B6D915A94A3AFC43B318D1C7" },
-  { name = "mime", version = "2.0.6", build_tools = ["mix"], requirements = [], otp_app = "mime", source = "hex", outer_checksum = "C9945363A6B26D747389AAC3643F8E0E09D30499A138AD64FE8FD1D13D9B153E" },
-  { name = "mint", version = "1.6.2", build_tools = ["mix"], requirements = ["castore", "hpax"], otp_app = "mint", source = "hex", outer_checksum = "5EE441DFFC1892F1AE59127F74AFE8FD82FDA6587794278D924E4D90EA3D63F9" },
-  { name = "nimble_csv", version = "1.2.0", build_tools = ["mix"], requirements = [], otp_app = "nimble_csv", source = "hex", outer_checksum = "D0628117FCC2148178B034044C55359B26966C6EAA8E2CE15777BE3BBC91B12A" },
-  { name = "nimble_options", version = "1.1.1", build_tools = ["mix"], requirements = [], otp_app = "nimble_options", source = "hex", outer_checksum = "821B2470CA9442C4B6984882FE9BB0389371B8DDEC4D45A9504F00A66F650B44" },
-  { name = "nimble_pool", version = "1.1.0", build_tools = ["mix"], requirements = [], otp_app = "nimble_pool", source = "hex", outer_checksum = "AF2E4E6B34197DB81F7AAD230C1118EAC993ACC0DAE6BC83BAC0126D4AE0813A" },
-  { name = "plug", version = "1.16.1", build_tools = ["mix"], requirements = ["mime", "plug_crypto", "telemetry"], otp_app = "plug", source = "hex", outer_checksum = "A13FF6B9006B03D7E33874945B2755253841B238C34071ED85B0E86057F8CDDC" },
-  { name = "plug_crypto", version = "2.1.0", build_tools = ["mix"], requirements = [], otp_app = "plug_crypto", source = "hex", outer_checksum = "131216A4B030B8F8CE0F26038BC4421AE60E4BB95C5CF5395E1421437824C4FA" },
-  { name = "req", version = "0.5.6", build_tools = ["mix"], requirements = ["brotli", "ezstd", "finch", "jason", "mime", "nimble_csv", "plug"], otp_app = "req", source = "hex", outer_checksum = "CFAA8E720945D46654853DE39D368F40362C2641C4B2153C886418914B372185" },
-  { name = "rustler", version = "0.34.0", build_tools = ["mix"], requirements = ["jason", "req", "toml"], otp_app = "rustler", source = "hex", outer_checksum = "1D0C7449482B459513003230C0E2422B0252245776FE6FD6E41CB2B11BD8E628" },
   { name = "rustler_precompiled", version = "0.7.2", build_tools = ["mix"], requirements = ["castore", "rustler"], otp_app = "rustler_precompiled", source = "hex", outer_checksum = "7663FAAEADC9E93E605164DCF9E69168E35F2F8B7F2B9EB4E400D1A8E0FE2999" },
   { name = "secp256k1_gleam", version = "1.0.3", build_tools = ["gleam"], requirements = ["ex_secp256k1", "gleam_stdlib"], otp_app = "secp256k1_gleam", source = "hex", outer_checksum = "378F950846258E18CBFBE55BCE4902E19501CB50C2C97DBB85FDF6AD7ED7DBA6" },
-  { name = "telemetry", version = "1.2.1", build_tools = ["rebar3"], requirements = [], otp_app = "telemetry", source = "hex", outer_checksum = "DAD9CE9D8EFFC621708F99EAC538EF1CBE05D6A874DD741DE2E689C47FEAFED5" },
-  { name = "thoas", version = "1.2.1", build_tools = ["rebar3"], requirements = [], otp_app = "thoas", source = "hex", outer_checksum = "E38697EDFFD6E91BD12CEA41B155115282630075C2A727E7A6B2947F5408B86A" },
-  { name = "toml", version = "0.7.0", build_tools = ["mix"], requirements = [], otp_app = "toml", source = "hex", outer_checksum = "0690246A2478C1DEFD100B0C9B89B4EA280A22BE9A7B313A8A058A2408A2FA70" },
 ]
 
 [requirements]
-gleam_crypto = { version = ">= 1.3.0 and < 2.0.0" }
-gleam_http = { version = ">= 3.6.0 and < 4.0.0" }
 gleam_httpc = { version = ">= 2.2.0 and < 3.0.0" }
-gleam_json = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.34.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
 keccak_gleam = { version = ">= 1.0.1 and < 2.0.0" }
