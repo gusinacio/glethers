@@ -30,6 +30,7 @@ gleam test  # Run the tests
 - [x] Signing and verifying messages
 - [x] Crypto functions: keccak256, sha256, etc
 - [x] Eip712 signed typed message
+- [ ] RLP encoding and decoding
 - [ ] Blockchain primitives: 
     - [x] Address
     - [x] Signature

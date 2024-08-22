@@ -7,6 +7,10 @@ pub opaque type Bytes32 {
   Bytes32(BitArray)
 }
 
+pub type Bytes48 {
+  Bytes48(BitArray)
+}
+
 pub fn decoder(
   value: dynamic.Dynamic,
 ) -> Result(Bytes32, List(dynamic.DecodeError)) {
