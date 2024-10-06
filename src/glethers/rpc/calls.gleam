@@ -1,5 +1,6 @@
-import gleam/dynamic.{field, int, string}
+import gleam/dynamic
 import gleam/json
+import toy
 
 pub type JsonRpcResponse {
   Result(id: Int, jsonrpc: String, result: dynamic.Dynamic)
@@ -10,33 +11,34 @@ pub type JsonRpcError {
   JsonRpcError(code: Int, message: String)
 }
 
-fn error_decoder() {
-  dynamic.decode2(
-    JsonRpcError,
-    field("code", of: int),
-    field("message", of: string),
-  )
+fn rpc_error_decoder() -> toy.Decoder(JsonRpcError) {
+  use code <- toy.field("code", toy.int)
+  use message <- toy.field("message", toy.string)
+  toy.decoded(JsonRpcError(code:, message:))
+}
+
+fn result_decoder() {
+  use id <- toy.field("id", toy.int)
+  use jsonrpc <- toy.field("jsonrpc", toy.string)
+  use result <- toy.field("result", toy.dynamic)
+  toy.decoded(Result(id:, jsonrpc:, result:))
+}
+
+fn response_error_decoder() {
+  use id <- toy.field("id", toy.int)
+  use jsonrpc <- toy.field("jsonrpc", toy.string)
+  use error <- toy.field("error", rpc_error_decoder())
+  toy.decoded(Error(id:, jsonrpc:, error:))
 }
 
 fn response_decoder() {
-  dynamic.any([
-    dynamic.decode3(
-      Result,
-      field("id", of: int),
-      field("jsonrpc", of: string),
-      field("result", of: dynamic.dynamic),
-    ),
-    dynamic.decode3(
-      Error,
-      field("id", of: int),
-      field("jsonrpc", of: string),
-      field("error", error_decoder()),
-    ),
-  ])
+  toy.one_of([result_decoder(), response_error_decoder()])
 }
 
-pub fn decode(json_string: String) -> Result(JsonRpcResponse, json.DecodeError) {
-  json.decode(from: json_string, using: response_decoder())
+pub fn decode(
+  data: dynamic.Dynamic,
+) -> Result(JsonRpcResponse, List(toy.ToyError)) {
+  data |> toy.decode(response_decoder())
 }
 
 pub type RpcRequest {

@@ -2,21 +2,27 @@
 # You typically do not need to edit this file
 
 packages = [
-  { name = "castore", version = "1.0.8", build_tools = ["mix"], requirements = [], otp_app = "castore", source = "hex", outer_checksum = "0B2B66D2EE742CB1D9CB8C8BE3B43C3A70EE8651F37B75A8B982E036752983F1" },
+  { name = "castore", version = "1.0.9", build_tools = ["mix"], requirements = [], otp_app = "castore", source = "hex", outer_checksum = "5EA956504F1BA6F2B4EB707061D8E17870DE2BEE95FB59D512872C2EF06925E7" },
   { name = "ex_keccak", version = "0.7.5", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_keccak", source = "hex", outer_checksum = "8A5E1CB7F96FFF5E480FF6A121477B90C4FD8C150984086DFFD98819F5D83763" },
   { name = "ex_secp256k1", version = "0.7.3", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_secp256k1", source = "hex", outer_checksum = "EA63159442F4D8143166CD1507DA03EDC43216D6E7C6BAC4B416BDCE04F0DAA8" },
-  { name = "gleam_http", version = "3.6.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "8C07DF9DF8CC7F054C650839A51C30A7D3C26482AC241C899C1CEA86B22DBE51" },
-  { name = "gleam_httpc", version = "2.2.0", build_tools = ["gleam"], requirements = ["gleam_http", "gleam_stdlib"], otp_app = "gleam_httpc", source = "hex", outer_checksum = "CF76C71002DEECF6DC5D9CA83D962728FAE166B57926BE442D827004D3C7DF1B" },
+  { name = "gleam_http", version = "3.7.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "EA66440C2269F7CED0F6845E5BD0DB68095775D627FA709A841CA78A398D6D56" },
+  { name = "gleam_httpc", version = "2.3.0", build_tools = ["gleam"], requirements = ["gleam_http", "gleam_stdlib"], otp_app = "gleam_httpc", source = "hex", outer_checksum = "CF6CDD88830CC9853F7638ECC0BE7D7CD9522640DA5FAB4C08CFAC8DEBD08028" },
+  { name = "gleam_json", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib", "thoas"], otp_app = "gleam_json", source = "hex", outer_checksum = "9063D14D25406326C0255BDA0021541E797D8A7A12573D849462CAFED459F6EB" },
   { name = "gleam_stdlib", version = "0.40.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "86606B75A600BBD05E539EB59FABC6E307EEEA7B1E5865AFB6D980A93BCB2181" },
   { name = "gleeunit", version = "1.2.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "F7A7228925D3EE7D0813C922E062BFD6D7E9310F0BEE585D3A42F3307E3CFD13" },
   { name = "keccak_gleam", version = "1.0.1", build_tools = ["gleam"], requirements = ["ex_keccak", "gleam_stdlib"], otp_app = "keccak_gleam", source = "hex", outer_checksum = "27D479A1E45924760B6E1DCB6D84E53B55F1BFD4B6D915A94A3AFC43B318D1C7" },
-  { name = "rustler_precompiled", version = "0.7.2", build_tools = ["mix"], requirements = ["castore", "rustler"], otp_app = "rustler_precompiled", source = "hex", outer_checksum = "7663FAAEADC9E93E605164DCF9E69168E35F2F8B7F2B9EB4E400D1A8E0FE2999" },
+  { name = "rustler_precompiled", version = "0.8.2", build_tools = ["mix"], requirements = ["castore", "rustler"], otp_app = "rustler_precompiled", source = "hex", outer_checksum = "63D1BD5F8E23096D1FF851839923162096364BAC8656A4A3C00D1FFF8E83EE0A" },
   { name = "secp256k1_gleam", version = "1.0.3", build_tools = ["gleam"], requirements = ["ex_secp256k1", "gleam_stdlib"], otp_app = "secp256k1_gleam", source = "hex", outer_checksum = "378F950846258E18CBFBE55BCE4902E19501CB50C2C97DBB85FDF6AD7ED7DBA6" },
+  { name = "thoas", version = "1.2.1", build_tools = ["rebar3"], requirements = [], otp_app = "thoas", source = "hex", outer_checksum = "E38697EDFFD6E91BD12CEA41B155115282630075C2A727E7A6B2947F5408B86A" },
+  { name = "toy", version = "0.5.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "toy", source = "hex", outer_checksum = "0C96FD47D8187634B6B0B693BC6464FD3EB0FDA8DD0A8A5516FAD7D2A5A24B36" },
 ]
 
 [requirements]
+gleam_http = { version = ">= 3.6.0 and < 4.0.0" }
 gleam_httpc = { version = ">= 2.2.0 and < 3.0.0" }
+gleam_json = { version = ">= 1.0.0 and < 2.0.0" }
 gleam_stdlib = { version = ">= 0.34.0 and < 2.0.0" }
 gleeunit = { version = ">= 1.0.0 and < 2.0.0" }
 keccak_gleam = { version = ">= 1.0.1 and < 2.0.0" }
 secp256k1_gleam = { version = ">= 1.0.3 and < 2.0.0" }
+toy = { version = ">= 0.5.1 and < 1.0.0" }
