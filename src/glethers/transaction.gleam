@@ -1,13 +1,13 @@
 import gleam/option.{type Option}
+import gleam/result
 import glethers/address
 import glethers/hash/message
 import glethers/primitives/bytes
+import glethers/primitives/integer/uint256
 import glethers/primitives/integer
+import glethers/provider
 import glethers/transaction/eip2930
 import glethers/transaction/sidecar
-
-pub type ChainId =
-  integer.Uint64
 
 pub type TxType {
   /// Legacy transaction type.
@@ -29,19 +29,19 @@ fn tx_type_id(tx_type: TxType) -> Int {
   }
 }
 
-pub type TransactionRequest {
+pub opaque type TransactionRequest {
   TransactionRequest(
     from: Option(address.Address),
-    to: Option(address.Address),
+    to: Option(TxKind),
     gas_price: Option(integer.Uint128),
     max_fee_per_gas: Option(integer.Uint128),
     max_priority_fee_per_gas: Option(integer.Uint128),
     max_fee_per_blob_gas: Option(integer.Uint128),
-    gas: Option(integer.Uint128),
-    value: Option(integer.Uint256),
+    gas: Option(integer.Uint64),
+    value: Option(uint256.Uint256),
     input: TransactionInput,
     nonce: Option(integer.Uint64),
-    chain_id: Option(ChainId),
+    chain_id: Option(integer.Uint64),
     access_list: Option(eip2930.AccessList),
     transaction_type: Option(integer.Uint8),
     blob_versioned_hashes: Option(List(bytes.Bytes32)),
@@ -49,12 +49,73 @@ pub type TransactionRequest {
   )
 }
 
+pub fn new() -> TransactionRequest {
+  TransactionRequest(
+    from: option.None,
+    to: option.None,
+    gas_price: option.None,
+    max_fee_per_gas: option.None,
+    max_priority_fee_per_gas: option.None,
+    max_fee_per_blob_gas: option.None,
+    gas: option.None,
+    value: option.None,
+    input: TransactionInput(input: option.None, data: option.None),
+    nonce: option.None,
+    chain_id: option.None,
+    access_list: option.None,
+    transaction_type: option.None,
+    blob_versioned_hashes: option.None,
+    sidecar: option.None,
+  )
+}
+
+pub fn build(_request: TransactionRequest) -> Result(TypedTransaction, String) {
+  // let assert option.Some(tx_type) = buildable_type(request)
+  Ok(TypedTransaction)
+}
+
+// fn buildable_type(_request: TransactionRequest) -> Option(TxType) {
+//   option.None
+// }
+
+pub type TypedTransaction {
+  TypedTransaction
+}
+
 pub type TransactionInput {
-  TransactionInput(data: List(integer.Uint8))
+  TransactionInput(input: Option(BitArray), data: Option(BitArray))
+}
+
+fn into_input(tx: TransactionInput) -> Option(BitArray) {
+  option.or(tx.input, tx.data)
 }
 
 pub type Transaction {
-  Transaction(to: address.Address)
+  TxLegacy(
+    chain_id: Option(integer.Uint64),
+    nonce: integer.Uint64,
+    gas_price: integer.Uint64,
+    gas_limit: integer.Uint64,
+    to: TxKind,
+    value: uint256.Uint256,
+    input: BitArray,
+  )
+  TxEip1559(
+    chain_id: Option(integer.Uint64),
+    nonce: integer.Uint64,
+    gas_limit: integer.Uint64,
+    max_fee_per_gas: integer.Uint128,
+    max_priority_fee_per_gas: integer.Uint128,
+    to: TxKind,
+    value: uint256.Uint256,
+    access_list: eip2930.AccessList,
+    input: BitArray,
+  )
+}
+
+pub type TxKind {
+  Create
+  Call(address.Address)
 }
 
 pub fn hash(_transaction: Transaction) -> message.Hash {
@@ -82,7 +143,82 @@ fn preferred_type(tx: TransactionRequest) -> TxType {
     _, _, _ -> Eip1559
   }
 }
+
+pub fn parse(tx: TransactionRequest) {
+  let parse = case preferred_type(tx) {
+    Eip1559 -> build_eip1559
+    Eip2930 -> parse_eip2930
+    Eip4844 -> parse_eip4844
+    Legacy -> parse_legacy
+  }
+  parse(tx)
+}
+
+fn build_eip1559(tx: TransactionRequest) -> Result(Transaction, String) {
+  use to <- result.try(
+    tx.to
+    |> option.to_result("Missing 'to' field for Eip1559 transaction."),
+  )
+  use nonce <- result.try(
+    tx.nonce
+    |> option.to_result("Missing 'nonce' field for Eip1559 transaction."),
+  )
+  use gas_limit <- result.try(
+    tx.gas
+    |> option.to_result("Missing 'gas_limit' field for Eip1559 transaction."),
+  )
+
+  use max_fee_per_gas <- result.try(
+    tx.max_fee_per_gas
+    |> option.to_result(
+      "Missing 'max_fee_per_gas' field for Eip1559 transaction.",
+    ),
+  )
+
+  use max_priority_fee_per_gas <- result.try(
+    tx.max_priority_fee_per_gas
+    |> option.to_result(
+      "Missing 'max_priority_fee_per_gas' field for Eip1559 transaction.",
+    ),
+  )
+
+  use value <- result.try(
+    tx.value
+    |> option.to_result("Missing 'value' field for Eip1559 transaction."),
+  )
+
+  use access_list <- result.try(
+    tx.access_list
+    |> option.to_result("Missing 'access_list' field for Eip1559 transaction."),
+  )
+
+  use input <- result.try(
+    tx.input
+    |> into_input
+    |> option.to_result("Missing 'input' field for Eip1559 transaction."),
+  )
+  Ok(TxEip1559(
+    chain_id: tx.chain_id,
+    nonce:,
+    gas_limit:,
+    max_fee_per_gas:,
+    max_priority_fee_per_gas:,
+    to:,
+    value:,
+    access_list:,
+    input:,
+  ))
+}
+
 //_parseLegacy
-//_parseEip2930
-//_parseEip1559
-//_parseEip4844
+fn parse_legacy(_tx: TransactionRequest) {
+  todo as "Legacy not implemented yet"
+}
+
+fn parse_eip2930(_tx: TransactionRequest) {
+  todo as "Eip2930 not implemented yet"
+}
+
+fn parse_eip4844(_tx: TransactionRequest) {
+  todo as "Eip4844 not implemented yet"
+}
