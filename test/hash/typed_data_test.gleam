@@ -6,7 +6,7 @@ import glethers/address
 import glethers/hash/message
 import glethers/hash/typed_data.{Primitive, Struct}
 import glethers/primitives
-import glethers/primitives/integer
+import glethers/primitives/integer/uint256
 import glethers/signer
 import glethers/signer/signing_key
 import secp256k1_gleam
@@ -18,7 +18,7 @@ pub fn hash_domain_test() {
     typed_data.TypedDataDomain(
       name: option.Some("Ether Mail"),
       version: option.Some("1"),
-      chain_id: option.Some(integer.Uint256(0x1)),
+      chain_id: option.Some(uint256.new_unchecked(0x1)),
       verifying_contract: option.Some(verifying_contract),
       salt: option.None,
     )
@@ -39,7 +39,7 @@ type Transaction {
 }
 
 type Asset {
-  Asset(token: address.Address, amount: integer.Uint256)
+  Asset(token: address.Address, amount: uint256.Uint256)
 }
 
 fn asset_encoder(asset: Asset) -> typed_data.TypedData {
@@ -77,7 +77,7 @@ pub fn hash_structure_test() {
 
   let person_1 = Person(name: "Cow", wallet: wallet_1)
   let person_2 = Person(name: "Dog", wallet: wallet_2)
-  let asset = Asset(token: wallet_3, amount: integer.Uint256(0x1))
+  let asset = Asset(token: wallet_3, amount: uint256.new_unchecked(0x1))
 
   let transaction = Transaction(from: person_1, to: person_2, tx: asset)
   let typed_data = transaction_encoder(transaction)
@@ -110,7 +110,7 @@ pub fn hash_message_test() {
     typed_data.TypedDataDomain(
       name: option.Some("Ether Mail"),
       version: option.Some("1"),
-      chain_id: option.Some(integer.Uint256(0x1)),
+      chain_id: option.Some(uint256.new_unchecked(0x1)),
       verifying_contract: option.Some(verifying_contract),
       salt: option.None,
     )
@@ -135,7 +135,7 @@ pub fn sign_typed_data_test() {
     typed_data.TypedDataDomain(
       name: option.Some("Ether Mail"),
       version: option.Some("1"),
-      chain_id: option.Some(integer.Uint256(0x1)),
+      chain_id: option.Some(uint256.new_unchecked(0x1)),
       verifying_contract: option.Some(verifying_contract),
       salt: option.None,
     )

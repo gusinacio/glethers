@@ -8,7 +8,7 @@ import glethers/address.{type Address}
 import glethers/hash/message
 import glethers/primitives
 import glethers/primitives/bytes
-import glethers/primitives/integer
+import glethers/primitives/integer/uint256
 import keccak_gleam
 
 // domain should define its own fields
@@ -17,7 +17,7 @@ pub type TypedDataDomain {
   TypedDataDomain(
     name: Option(String),
     version: Option(String),
-    chain_id: Option(integer.Uint256),
+    chain_id: Option(uint256.Uint256),
     verifying_contract: Option(Address),
     salt: Option(bytes.Bytes32),
   )

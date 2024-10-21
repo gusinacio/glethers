@@ -1,25 +1,25 @@
 import gleam/dynamic
 import gleeunit/should
 import glethers/address
-import glethers/primitives/integer
+import glethers/primitives/integer/uint256
 
 pub fn uint256_decode_test() {
-  let value = integer.Uint256(123_456_789)
+  let value = uint256.new_unchecked(123_456_789)
   let dynamic_v = dynamic.from(value)
 
-  let primitive = integer.decoder(dynamic_v)
+  let primitive = uint256.decoder(dynamic_v)
   primitive |> should.be_ok
   let assert Ok(_) = primitive
 }
 
 pub fn uint256_to_bit_array_test() {
-  let value = integer.Uint256(0x123465789abcdef123456789abcdef123456)
+  let value = uint256.new_unchecked(0x123465789abcdef123456789abcdef123456)
   let expected = <<
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 52, 101, 120, 154, 188, 222,
     241, 35, 69, 103, 137, 171, 205, 239, 18, 52, 86,
   >>
 
-  value |> integer.to_bit_array |> should.equal(expected)
+  value |> uint256.to_bit_array |> should.equal(expected)
 }
 
 pub fn address_to_bit_array_test() {
