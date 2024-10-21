@@ -3,6 +3,7 @@
 
 packages = [
   { name = "castore", version = "1.0.9", build_tools = ["mix"], requirements = [], otp_app = "castore", source = "hex", outer_checksum = "5EA956504F1BA6F2B4EB707061D8E17870DE2BEE95FB59D512872C2EF06925E7" },
+  { name = "envoy", version = "1.0.1", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "envoy", source = "hex", outer_checksum = "CFAACCCFC47654F7E8B75E614746ED924C65BD08B1DE21101548AC314A8B6A41" },
   { name = "ex_keccak", version = "0.7.5", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_keccak", source = "hex", outer_checksum = "8A5E1CB7F96FFF5E480FF6A121477B90C4FD8C150984086DFFD98819F5D83763" },
   { name = "ex_secp256k1", version = "0.7.3", build_tools = ["mix"], requirements = ["rustler", "rustler_precompiled"], otp_app = "ex_secp256k1", source = "hex", outer_checksum = "EA63159442F4D8143166CD1507DA03EDC43216D6E7C6BAC4B416BDCE04F0DAA8" },
   { name = "gleam_http", version = "3.7.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_http", source = "hex", outer_checksum = "EA66440C2269F7CED0F6845E5BD0DB68095775D627FA709A841CA78A398D6D56" },
@@ -18,6 +19,7 @@ packages = [
 ]
 
 [requirements]
+envoy = { version = ">= 1.0.1 and < 2.0.0" }
 gleam_http = { version = ">= 3.6.0 and < 4.0.0" }
 gleam_httpc = { version = ">= 2.2.0 and < 3.0.0" }
 gleam_json = { version = ">= 1.0.0 and < 2.0.0" }

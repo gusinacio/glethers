@@ -1,5 +1,7 @@
+import envoy
 import gleam/dynamic
 import gleam/httpc
+import gleam/result
 import gleeunit/should
 import glethers/address
 import glethers/block
@@ -10,7 +12,9 @@ import glethers/rpc/methods
 import glethers/wei
 
 pub fn rpc_methods_test() {
-  let assert Ok(provider) = provider.new_rpc_provider("http://127.0.0.1:8545")
+  let provider =
+    envoy.get("RPC_ENDPOINT") |> result.unwrap("http://127.0.0.1:8545")
+  let assert Ok(provider) = provider.new_rpc_provider(provider)
   let assert Ok(address) =
     address.from_string("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
 

@@ -12,14 +12,21 @@ jobs:
     services:
       anvil:
         image: ghcr.io/foundry-rs/foundry
-        options: --entrypoint anvil --host 0.0.0.0
+        options: >-
+          --entrypoint anvil
+        env:
+          ANVIL_IP_ADDR: "0.0.0.0"
+        ports:
+          - 8545:8545
     runs-on: ubuntu-latest
+    # env:
+    #   RPC_ENDPOINT: "http://anvil:8545"
     steps:
       - uses: actions/checkout@v4
       - uses: erlef/setup-beam@v1
         with:
           otp-version: "26.0.2"
-          gleam-version: "1.4.0-rc1"
+          gleam-version: "1.5.1"
           rebar3-version: "3"
           elixir-version: "1.15.4"
       - run: gleam deps download
