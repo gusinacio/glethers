@@ -9,6 +9,10 @@ on:
 
 jobs:
   test:
+    services:
+      anvil:
+        image: ghcr.io/foundry-rs/foundry
+        options: --entrypoint anvil --host 0.0.0.0
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
