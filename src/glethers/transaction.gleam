@@ -3,8 +3,8 @@ import gleam/result
 import glethers/address
 import glethers/hash/message
 import glethers/primitives/bytes
-import glethers/primitives/integer/uint256
 import glethers/primitives/integer
+import glethers/primitives/integer/uint256
 import glethers/provider
 import glethers/transaction/eip2930
 import glethers/transaction/sidecar
