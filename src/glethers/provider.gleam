@@ -12,8 +12,13 @@ import gleam/http/request
 // import gleam/httpc
 import gleam/json
 
-pub type Provider {
+pub opaque type Provider {
   Rpc(endpoint: String)
+}
+
+pub fn new_rpc_provider(endpoint: String) -> Result(Provider, Nil) {
+  use _ <- result.try(request.to(endpoint))
+  Ok(Rpc(endpoint))
 }
 
 pub type ProviderError {
@@ -25,9 +30,9 @@ pub fn to_request(
   provider: Provider,
   method: methods.RpcMethod,
 ) -> request.Request(String) {
-  request.new()
+  let assert Ok(request) = request.to(provider.endpoint)
+  request
   |> request.set_method(Post)
-  |> request.set_host(provider.endpoint)
   |> request.set_body(method)
   |> request.set_path("/")
   |> request.prepend_header("Content-Type", "application/json")
