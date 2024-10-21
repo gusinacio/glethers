@@ -7,7 +7,6 @@ pub type RpcMethod {
   BlockNumber
   ChainId
   GasPrice
-  GetAccount(address: address.Address, block: block.Block)
   GetBalance(address: address.Address, block: block.Block)
 }
 
@@ -16,10 +15,6 @@ pub fn convert_to_body(method: RpcMethod) -> String {
     BlockNumber -> #("eth_blockNumber", [])
     ChainId -> #("eth_chainId", [])
     GasPrice -> #("eth_gasPrice", [])
-    GetAccount(address: address, block: block) -> #("eth_getAccount", [
-      address |> address.to_string,
-      block |> block.to_string,
-    ])
     GetBalance(address: address, block: block) -> #("eth_getBalance", [
       address |> address.to_string,
       block |> block.to_string,

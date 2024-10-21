@@ -1,12 +1,12 @@
 // EIP-4844 sidecar type
 
-import glethers/primitives/bytes
+import glethers/primitives/bytes.{type Bytes48}
 
 pub type BlobTransactionSidecar {
   BlobTransactionSidecar(
     blobs: List(Blob),
-    commitments: List(bytes.Bytes48),
-    proofs: List(bytes.Bytes48),
+    commitments: List(Bytes48),
+    proofs: List(Bytes48),
   )
 }
 

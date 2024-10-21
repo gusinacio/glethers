@@ -1,0 +1,8 @@
+- [ ] prepare transaction request: filling all fields: (gas, from, to, etc)
+    - [ ] estimate the gas
+- [ ] cleanup any fields that is not related to the type of transaction
+- [ ] Serialization into RLP
+- [ ] RLP encode of transaction
+- [ ] use keccak to get the hash
+- [ ] sign the hash
+- [ ] sendRawTransaction
